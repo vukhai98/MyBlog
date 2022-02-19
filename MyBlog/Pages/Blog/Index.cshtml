@@ -1,0 +1,79 @@
+﻿@page "/blogs"
+@model MyBlog.Pages.Blog.IndexModel
+@using MyBlog.Helpers
+
+@{
+    ViewData["Title"] = "Danh sách bài viết";
+    int i = 0;
+    if (Model.currentPage != 1)
+    {
+        i = (Model.currentPage * 10) - 10;
+    }
+}
+
+
+@{
+    Func<int?, string> generateUrl = (int? _pagenumber) =>
+    {
+        return Url.Page("/Blog/Index", new { p = _pagenumber });
+    };
+    var pagingmodel = new PagingModel()
+    {
+        currentPage = Model.currentPage,
+        countPages = Model.countPages,
+        generateUrl = generateUrl,
+        Keyword = HttpContext.Request?.Query["Keyword"].ToString()
+    };
+}
+
+<h1>Danh sách bài viết @Url.Page("/blogs", new { p = 1 })</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Tạo mới</a>
+</p>
+<form method="get" asp-page="./Index">
+    <p>
+        Search: <input type="text" asp-for="Keyword" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Created)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Article != null && Model.Article.Any())
+        {
+            foreach (var item in Model.Article)
+            {
+                <tr>
+                    <td>@(++i)</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Sửa</a> |
+                        <a asp-page="./Details" asp-route-id="@item.Id">Xem</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Xóa</a>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+<partial name="_Paging" model="@pagingmodel" />

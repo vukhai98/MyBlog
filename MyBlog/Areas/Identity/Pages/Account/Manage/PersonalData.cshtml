@@ -1,0 +1,27 @@
+﻿@page "/user/personal-data/"
+@model PersonalDataModel
+@{
+    ViewData["Title"] = "Dữ liệu cá nhân";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <p>Bạn có thể tải dữ liệu cá nhân về hoặc xóa hoàn toàn thông tin trên My RozorWeb</p>
+        <p>
+            <strong>Nếu xóa tài khoản thì không thể khôi phục lại được tài khoản.</strong>
+        </p>
+        <form id="download-data" asp-page="DownloadPersonalData" method="post" class="form-group">
+            <button class="btn btn-primary" type="submit">Tải dữ liệu</button>
+        </form>
+        <p>
+            <a id="delete" asp-page="DeletePersonalData" class="btn btn-secondary">Xóa tài khoản</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
